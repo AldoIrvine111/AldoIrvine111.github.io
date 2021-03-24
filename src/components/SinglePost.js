@@ -68,9 +68,7 @@ export default function SinglePost() {
           />
         </header>
         <div className="px-16 lg:px-48 py-12 lg:py-20 prose lg:proxe-xl max-w-full">
-          <BlockContent
-            blocks={singlePost.body}
-          />
+          <BlockContent blocks={singlePost.body} />
         </div>
       </article>
     </main>
