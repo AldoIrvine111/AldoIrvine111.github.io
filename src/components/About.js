@@ -28,7 +28,7 @@ export default function About() {
   }, []);
 
   if (!author) {
-    return <div>NOOOOOOOOOOOOOOOO</div>;
+    return <div>Loading...</div>;
   }
 
   return (
