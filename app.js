@@ -29,11 +29,13 @@ async function checkAdmin(user) {
 let authInProgress = false;
 
 onAuthStateChanged(auth, async (user) => {
+  console.log('Auth state changed:', user);
   currentUser = user;
   if (user) {
     authBtn.textContent = 'Logout';
     userEmail.textContent = user.email;
     isAdmin = await checkAdmin(user);
+    console.log('isAdmin:', isAdmin);
     addBtn.style.display = isAdmin ? 'block' : 'none';
   } else {
     authBtn.textContent = 'Login';
