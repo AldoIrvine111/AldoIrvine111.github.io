@@ -121,13 +121,64 @@ function renderRecipes(recipes) {
     return;
   }
 
+  // --- Recipe Modal ---
+  const recipeModal = document.getElementById("recipe-modal");
+  const recipeModalContent = document.getElementById("recipe-modal-content");
+  const recipeModalClose = document.getElementById("recipe-modal-close");
+
+  window.openRecipe = function (id) {
+    const recipe = allRecipes.find((r) => r.id === id);
+    if (!recipe) return;
+
+    recipeModalContent.innerHTML = `
+    ${recipe.image_url ? `<img src="${recipe.image_url}" alt="${recipe.title}" />` : ""}
+    <div class="modal-category">${recipe.category || "Uncategorised"}</div>
+    <h2>${recipe.title}</h2>
+    <div class="modal-meta">
+      <span>🍽 ${recipe.serving || "—"} servings</span>
+      <span>⏱ Prep ${recipe.prep_time || "—"}m</span>
+      <span>🔥 Cook ${recipe.cook_time || "—"}m</span>
+    </div>
+    <div class="modal-tags">
+      ${(recipe.tags || []).map((t) => `<span>${t}</span>`).join("")}
+    </div>
+    <h3>Ingredients</h3>
+    <ul>
+      ${(recipe.ingredients || []).map((i) => `<li>${i}</li>`).join("")}
+    </ul>
+    <h3>Steps</h3>
+    <ol>
+      ${(recipe.steps || []).map((s) => `<li>${s}</li>`).join("")}
+    </ol>
+  `;
+
+    recipeModal.style.display = "flex";
+    document.body.style.paddingRight =
+      window.innerWidth - document.documentElement.clientWidth + "px";
+    document.body.style.overflow = "hidden";
+  };
+
+  recipeModalClose.addEventListener("click", () => {
+    recipeModal.style.display = "none";
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  });
+
+  recipeModal.addEventListener("click", (e) => {
+    if (e.target === recipeModal) {
+      recipeModal.style.display = "none";
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    }
+  });
+
   recipes.forEach((recipe) => {
     const card = document.createElement("div");
     card.className = "recipe-card";
 
     const imageHtml = recipe.image_url
-      ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" />`
-      : `<div class="card-image-placeholder">🍽️</div>`;
+      ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" onclick="openRecipe('${recipe.id}')" style="cursor:pointer;" />`
+      : `<div class="card-image-placeholder" onclick="openRecipe('${recipe.id}')" style="cursor:pointer;">🍽️</div>`;
 
     const tagsHtml = (recipe.tags || [])
       .map((t) => `<span>${t}</span>`)
@@ -145,7 +196,7 @@ function renderRecipes(recipes) {
       ${imageHtml}
       <div class="card-body">
         <div class="category">${recipe.category || "Uncategorised"}</div>
-        <h2>${recipe.title}</h2>
+        <h2 onclick="openRecipe('${recipe.id}')" style="cursor:pointer;">${recipe.title}</h2>
         <div class="meta">
           <span class="meta-item">🍽 ${recipe.serving || "—"} servings</span>
           <span class="meta-item">⏱ Prep ${recipe.prep_time || "—"}m</span>
