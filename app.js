@@ -20,6 +20,8 @@ const editIdField = document.getElementById('edit-id');
 // --- Admin Check ---
 async function checkAdmin(user) {
   const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+  console.log('UID:', user.uid);
+  console.log('Admin doc exists:', adminDoc.exists());
   return adminDoc.exists();
 }
 
