@@ -13,7 +13,27 @@
       <button id="auth-btn">Login</button>
     </header>
 
-    <div id="landing">
+    <div
+      id="auth-loader"
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 70px);
+      "
+    >
+      <p
+        style="
+          font-family: &quot;Playfair Display&quot;, serif;
+          color: #9e8c7a;
+          font-style: italic;
+        "
+      >
+        Loading...
+      </p>
+    </div>
+
+    <div id="landing" style="display: none">
       <div id="landing-box">
         <span class="landing-icon">🍳</span>
         <h2>My <span>Cookbook</span></h2>
@@ -27,7 +47,7 @@
         </button>
       </div>
     </div>
-    
+
     <main style="display: none">
       <div class="search-wrap">
         <input

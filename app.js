@@ -46,6 +46,8 @@ async function checkAdmin(user) {
 let authInProgress = false;
 
 onAuthStateChanged(auth, async (user) => {
+  const loader = document.getElementById("auth-loader");
+  if (loader) loader.style.display = "none";
   currentUser = user;
   if (user) {
     document.getElementById("landing").style.display = "none";
