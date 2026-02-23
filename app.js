@@ -161,10 +161,15 @@ function renderRecipes(recipes) {
   recipes.forEach((recipe) => {
     const card = document.createElement("div");
     card.className = "recipe-card";
+    card.style.cursor = "pointer";
+    card.addEventListener("click", (e) => {
+      if (e.target.closest(".card-actions")) return;
+      openRecipe(recipe.id);
+    });
 
     const imageHtml = recipe.image_url
-      ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" onclick="openRecipe('${recipe.id}')" style="cursor:pointer;" />`
-      : `<div class="card-image-placeholder" onclick="openRecipe('${recipe.id}')" style="cursor:pointer;">🍽️</div>`;
+      ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" />`
+      : `<div class="card-image-placeholder">🍽️</div>`;
 
     const tagsHtml = (recipe.tags || [])
       .map((t) => `<span>${t}</span>`)
@@ -406,6 +411,23 @@ modalConfirmBtn.addEventListener("click", async () => {
 
 deleteModal.addEventListener("click", (e) => {
   if (e.target === deleteModal) {
+    deleteModal.style.display = "none";
+    pendingDeleteId = null;
+  }
+});
+
+// --- Escape Key ---
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (recipeModal.style.display === "flex") {
+    closeRecipeModal();
+    return;
+  }
+  if (formModal.style.display === "flex") {
+    closeFormModal();
+    return;
+  }
+  if (deleteModal.style.display === "flex") {
     deleteModal.style.display = "none";
     pendingDeleteId = null;
   }
