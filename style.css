@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap");
 
 :root {
   --cream: #fdf8f2;
@@ -9,18 +9,30 @@
   --muted: #9e8c7a;
   --white: #ffffff;
   --border: #e2d4c1;
-  --shadow: 0 4px 24px rgba(59,42,26,0.08);
+  --shadow: 0 4px 24px rgba(59, 42, 26, 0.08);
   --radius: 12px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   background-color: var(--cream);
   background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(196,102,58,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(107,124,74,0.06) 0%, transparent 60%);
+    radial-gradient(
+      ellipse at 20% 20%,
+      rgba(196, 102, 58, 0.06) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 80% 80%,
+      rgba(107, 124, 74, 0.06) 0%,
+      transparent 60%
+    );
   color: var(--brown);
   min-height: 100vh;
   padding: 0;
@@ -36,11 +48,11 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 16px rgba(59,42,26,0.2);
+  box-shadow: 0 2px 16px rgba(59, 42, 26, 0.2);
 }
 
 header h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.8rem;
   color: var(--cream);
   font-weight: 700;
@@ -61,11 +73,11 @@ header h1 span {
 
 #auth-btn {
   background: transparent;
-  border: 1px solid rgba(253,248,242,0.3);
+  border: 1px solid rgba(253, 248, 242, 0.3);
   color: var(--cream);
   padding: 8px 18px;
   border-radius: 20px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -95,25 +107,29 @@ main {
   width: 100%;
   padding: 16px 20px 16px 48px;
   font-size: 1rem;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   border: 1.5px solid var(--border);
   border-radius: 40px;
   background: var(--white);
   color: var(--brown);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   box-shadow: var(--shadow);
 }
 
-#search-input::placeholder { color: var(--muted); }
+#search-input::placeholder {
+  color: var(--muted);
+}
 
 #search-input:focus {
   border-color: var(--olive);
-  box-shadow: 0 0 0 3px rgba(107,124,74,0.12);
+  box-shadow: 0 0 0 3px rgba(107, 124, 74, 0.12);
 }
 
 .search-wrap::before {
-  content: '🔍';
+  content: "🔍";
   position: absolute;
   left: 18px;
   top: 50%;
@@ -131,13 +147,15 @@ main {
   border: none;
   padding: 12px 28px;
   border-radius: 8px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-  box-shadow: 0 4px 12px rgba(196,102,58,0.3);
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  box-shadow: 0 4px 12px rgba(196, 102, 58, 0.3);
 }
 
 #add-btn:hover {
@@ -159,7 +177,7 @@ main {
 }
 
 #form-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.5rem;
   color: var(--brown);
   margin-bottom: 8px;
@@ -175,7 +193,7 @@ main {
 #recipe-form-container textarea {
   padding: 10px 14px;
   font-size: 0.95rem;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   width: 100%;
@@ -212,14 +230,16 @@ main {
   border: none;
   padding: 11px 28px;
   border-radius: 8px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-#save-btn:hover { background: #5a6b3c; }
+#save-btn:hover {
+  background: #5a6b3c;
+}
 
 #cancel-btn {
   background: transparent;
@@ -227,7 +247,7 @@ main {
   border: 1.5px solid var(--border);
   padding: 11px 24px;
   border-radius: 8px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -252,14 +272,16 @@ main {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   display: flex;
   flex-direction: column;
 }
 
 .recipe-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(59,42,26,0.13);
+  box-shadow: 0 12px 36px rgba(59, 42, 26, 0.13);
 }
 
 .recipe-card .card-image {
@@ -287,7 +309,7 @@ main {
 }
 
 .recipe-card h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.25rem;
   color: var(--brown);
   margin-bottom: 8px;
@@ -351,7 +373,7 @@ main {
   border: 1.5px solid var(--olive);
   padding: 8px;
   border-radius: 6px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
@@ -370,7 +392,7 @@ main {
   border: 1.5px solid var(--terracotta);
   padding: 8px;
   border-radius: 6px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
@@ -391,15 +413,84 @@ main {
 }
 
 .empty-state p {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 1.3rem;
   font-style: italic;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-  header { padding: 16px 20px; }
-  header h1 { font-size: 1.3rem; }
-  main { padding: 24px 16px; }
-  .form-row { grid-template-columns: 1fr; }
+  header {
+    padding: 16px 20px;
+  }
+  header h1 {
+    font-size: 1.3rem;
+  }
+  main {
+    padding: 24px 16px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+#delete-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(59, 42, 26, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(3px);
+}
+
+#delete-modal-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 20px 60px rgba(59, 42, 26, 0.2);
+  text-align: center;
+}
+
+#delete-modal-box h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+#delete-modal-box p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: "Lato", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-actions #modal-cancel-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+}
+
+.modal-actions #modal-cancel-btn:hover {
+  border-color: var(--muted);
+  color: var(--brown);
 }

@@ -1,9 +1,19 @@
-import { db, auth, provider } from './firebase.js';
+import { db, auth, provider } from "./firebase.js";
 import {
-  collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+  query,
+  orderBy,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
-  signInWithPopup, signOut, onAuthStateChanged
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // --- State ---
@@ -11,34 +21,34 @@ let currentUser = null;
 let allRecipes = [];
 
 // --- DOM ---
-const authBtn = document.getElementById('auth-btn');
-const userEmail = document.getElementById('user-email');
-const addBtn = document.getElementById('add-btn');
-const formContainer = document.getElementById('recipe-form-container');
-const formTitle = document.getElementById('form-title');
-const saveBtn = document.getElementById('save-btn');
-const cancelBtn = document.getElementById('cancel-btn');
-const recipeList = document.getElementById('recipe-list');
-const searchInput = document.getElementById('search-input');
-const editIdField = document.getElementById('edit-id');
+const authBtn = document.getElementById("auth-btn");
+const userEmail = document.getElementById("user-email");
+const addBtn = document.getElementById("add-btn");
+const formContainer = document.getElementById("recipe-form-container");
+const formTitle = document.getElementById("form-title");
+const saveBtn = document.getElementById("save-btn");
+const cancelBtn = document.getElementById("cancel-btn");
+const recipeList = document.getElementById("recipe-list");
+const searchInput = document.getElementById("search-input");
+const editIdField = document.getElementById("edit-id");
 
 // --- Auth ---
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   if (user) {
-    authBtn.textContent = 'Logout';
+    authBtn.textContent = "Logout";
     userEmail.textContent = user.email;
-    addBtn.style.display = 'block';
+    addBtn.style.display = "block";
   } else {
-    authBtn.textContent = 'Login';
-    userEmail.textContent = '';
-    addBtn.style.display = 'none';
-    formContainer.style.display = 'none';
+    authBtn.textContent = "Login";
+    userEmail.textContent = "";
+    addBtn.style.display = "none";
+    formContainer.style.display = "none";
   }
   loadRecipes();
 });
 
-authBtn.addEventListener('click', () => {
+authBtn.addEventListener("click", () => {
   if (currentUser) {
     signOut(auth);
   } else {
@@ -48,15 +58,15 @@ authBtn.addEventListener('click', () => {
 
 // --- Load Recipes ---
 async function loadRecipes() {
-  const q = query(collection(db, 'recipes'), orderBy('created_at', 'desc'));
+  const q = query(collection(db, "recipes"), orderBy("created_at", "desc"));
   const snapshot = await getDocs(q);
-  allRecipes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  allRecipes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   renderRecipes(allRecipes);
 }
 
 // --- Render ---
 function renderRecipes(recipes) {
-  recipeList.innerHTML = '';
+  recipeList.innerHTML = "";
 
   if (recipes.length === 0) {
     recipeList.innerHTML = `
@@ -66,31 +76,35 @@ function renderRecipes(recipes) {
     return;
   }
 
-  recipes.forEach(recipe => {
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
+  recipes.forEach((recipe) => {
+    const card = document.createElement("div");
+    card.className = "recipe-card";
 
     const imageHtml = recipe.image_url
       ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" />`
       : `<div class="card-image-placeholder">🍽️</div>`;
 
-    const tagsHtml = (recipe.tags || []).map(t => `<span>${t}</span>`).join('');
+    const tagsHtml = (recipe.tags || [])
+      .map((t) => `<span>${t}</span>`)
+      .join("");
 
-    const actionsHtml = currentUser ? `
+    const actionsHtml = currentUser
+      ? `
       <div class="card-actions">
         <button class="edit-btn" onclick="editRecipe('${recipe.id}')">Edit</button>
         <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">Delete</button>
-      </div>` : '';
+      </div>`
+      : "";
 
     card.innerHTML = `
       ${imageHtml}
       <div class="card-body">
-        <div class="category">${recipe.category || 'Uncategorised'}</div>
+        <div class="category">${recipe.category || "Uncategorised"}</div>
         <h2>${recipe.title}</h2>
         <div class="meta">
-          <span class="meta-item">🍽 ${recipe.serving || '—'} servings</span>
-          <span class="meta-item">⏱ Prep ${recipe.prep_time || '—'}m</span>
-          <span class="meta-item">🔥 Cook ${recipe.cook_time || '—'}m</span>
+          <span class="meta-item">🍽 ${recipe.serving || "—"} servings</span>
+          <span class="meta-item">⏱ Prep ${recipe.prep_time || "—"}m</span>
+          <span class="meta-item">🔥 Cook ${recipe.cook_time || "—"}m</span>
         </div>
         <div class="tags">${tagsHtml}</div>
         ${actionsHtml}
@@ -102,91 +116,133 @@ function renderRecipes(recipes) {
 }
 
 // --- Search ---
-searchInput.addEventListener('input', () => {
+searchInput.addEventListener("input", () => {
   const term = searchInput.value.toLowerCase();
-  const filtered = allRecipes.filter(r =>
-    r.title.toLowerCase().includes(term) ||
-    (r.category || '').toLowerCase().includes(term) ||
-    (r.tags || []).some(t => t.toLowerCase().includes(term))
+  const filtered = allRecipes.filter(
+    (r) =>
+      r.title.toLowerCase().includes(term) ||
+      (r.category || "").toLowerCase().includes(term) ||
+      (r.tags || []).some((t) => t.toLowerCase().includes(term)),
   );
   renderRecipes(filtered);
 });
 
 // --- Form Helpers ---
 function clearForm() {
-  editIdField.value = '';
-  document.getElementById('input-title').value = '';
-  document.getElementById('input-category').value = '';
-  document.getElementById('input-tags').value = '';
-  document.getElementById('input-serving').value = '';
-  document.getElementById('input-prep').value = '';
-  document.getElementById('input-cook').value = '';
-  document.getElementById('input-ingredients').value = '';
-  document.getElementById('input-steps').value = '';
-  document.getElementById('input-image').value = '';
+  editIdField.value = "";
+  document.getElementById("input-title").value = "";
+  document.getElementById("input-category").value = "";
+  document.getElementById("input-tags").value = "";
+  document.getElementById("input-serving").value = "";
+  document.getElementById("input-prep").value = "";
+  document.getElementById("input-cook").value = "";
+  document.getElementById("input-ingredients").value = "";
+  document.getElementById("input-steps").value = "";
+  document.getElementById("input-image").value = "";
 }
 
-addBtn.addEventListener('click', () => {
+addBtn.addEventListener("click", () => {
   clearForm();
-  formTitle.textContent = 'Add Recipe';
-  formContainer.style.display = 'flex';
-  formContainer.scrollIntoView({ behavior: 'smooth' });
+  formTitle.textContent = "Add Recipe";
+  formContainer.style.display = "flex";
+  formContainer.scrollIntoView({ behavior: "smooth" });
 });
 
-cancelBtn.addEventListener('click', () => {
-  formContainer.style.display = 'none';
+cancelBtn.addEventListener("click", () => {
+  formContainer.style.display = "none";
   clearForm();
 });
 
 // --- Save (Create / Update) ---
-saveBtn.addEventListener('click', async () => {
+saveBtn.addEventListener("click", async () => {
   const id = editIdField.value;
   const data = {
-    title: document.getElementById('input-title').value,
-    category: document.getElementById('input-category').value,
-    tags: document.getElementById('input-tags').value.split(',').map(t => t.trim()).filter(Boolean),
-    serving: parseInt(document.getElementById('input-serving').value) || 0,
-    prep_time: parseInt(document.getElementById('input-prep').value) || 0,
-    cook_time: parseInt(document.getElementById('input-cook').value) || 0,
-    ingredients: document.getElementById('input-ingredients').value.split('\n').map(i => i.trim()).filter(Boolean),
-    steps: document.getElementById('input-steps').value.split('\n').map(s => s.trim()).filter(Boolean),
-    image_url: document.getElementById('input-image').value.trim(),
+    title: document.getElementById("input-title").value,
+    category: document.getElementById("input-category").value,
+    tags: document
+      .getElementById("input-tags")
+      .value.split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
+    serving: parseInt(document.getElementById("input-serving").value) || 0,
+    prep_time: parseInt(document.getElementById("input-prep").value) || 0,
+    cook_time: parseInt(document.getElementById("input-cook").value) || 0,
+    ingredients: document
+      .getElementById("input-ingredients")
+      .value.split("\n")
+      .map((i) => i.trim())
+      .filter(Boolean),
+    steps: document
+      .getElementById("input-steps")
+      .value.split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean),
+    image_url: document.getElementById("input-image").value.trim(),
   };
 
   if (id) {
-    await updateDoc(doc(db, 'recipes', id), data);
+    await updateDoc(doc(db, "recipes", id), data);
   } else {
     data.created_at = serverTimestamp();
-    await addDoc(collection(db, 'recipes'), data);
+    await addDoc(collection(db, "recipes"), data);
   }
 
-  formContainer.style.display = 'none';
+  formContainer.style.display = "none";
   clearForm();
   loadRecipes();
 });
 
 // --- Edit ---
-window.editRecipe = function(id) {
-  const recipe = allRecipes.find(r => r.id === id);
+window.editRecipe = function (id) {
+  const recipe = allRecipes.find((r) => r.id === id);
   if (!recipe) return;
   editIdField.value = id;
-  document.getElementById('input-title').value = recipe.title || '';
-  document.getElementById('input-category').value = recipe.category || '';
-  document.getElementById('input-tags').value = (recipe.tags || []).join(', ');
-  document.getElementById('input-serving').value = recipe.serving || '';
-  document.getElementById('input-prep').value = recipe.prep_time || '';
-  document.getElementById('input-cook').value = recipe.cook_time || '';
-  document.getElementById('input-ingredients').value = (recipe.ingredients || []).join('\n');
-  document.getElementById('input-steps').value = (recipe.steps || []).join('\n');
-  document.getElementById('input-image').value = recipe.image_url || '';
-  formTitle.textContent = 'Edit Recipe';
-  formContainer.style.display = 'flex';
-  formContainer.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById("input-title").value = recipe.title || "";
+  document.getElementById("input-category").value = recipe.category || "";
+  document.getElementById("input-tags").value = (recipe.tags || []).join(", ");
+  document.getElementById("input-serving").value = recipe.serving || "";
+  document.getElementById("input-prep").value = recipe.prep_time || "";
+  document.getElementById("input-cook").value = recipe.cook_time || "";
+  document.getElementById("input-ingredients").value = (
+    recipe.ingredients || []
+  ).join("\n");
+  document.getElementById("input-steps").value = (recipe.steps || []).join(
+    "\n",
+  );
+  document.getElementById("input-image").value = recipe.image_url || "";
+  formTitle.textContent = "Edit Recipe";
+  formContainer.style.display = "flex";
+  formContainer.scrollIntoView({ behavior: "smooth" });
 };
 
-// --- Delete ---
-window.deleteRecipe = async function(id) {
-  if (!confirm('Delete this recipe?')) return;
-  await deleteDoc(doc(db, 'recipes', id));
-  loadRecipes();
+// --- Delete Modal ---
+let pendingDeleteId = null;
+const deleteModal = document.getElementById("delete-modal");
+const modalConfirmBtn = document.getElementById("modal-confirm-btn");
+const modalCancelBtn = document.getElementById("modal-cancel-btn");
+
+window.deleteRecipe = function (id) {
+  pendingDeleteId = id;
+  deleteModal.style.display = "flex";
 };
+
+modalCancelBtn.addEventListener("click", () => {
+  deleteModal.style.display = "none";
+  pendingDeleteId = null;
+});
+
+modalConfirmBtn.addEventListener("click", async () => {
+  if (!pendingDeleteId) return;
+  await deleteDoc(doc(db, "recipes", pendingDeleteId));
+  deleteModal.style.display = "none";
+  pendingDeleteId = null;
+  loadRecipes();
+});
+
+// Close modal if clicking outside the box
+deleteModal.addEventListener("click", (e) => {
+  if (e.target === deleteModal) {
+    deleteModal.style.display = "none";
+    pendingDeleteId = null;
+  }
+});
