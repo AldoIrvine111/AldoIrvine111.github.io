@@ -19,6 +19,7 @@ import {
   ref,
   uploadBytes,
   getDownloadURL,
+  deleteObject,
 } from "./firebase.js";
 
 // --- State ---
@@ -41,8 +42,6 @@ const editIdField = document.getElementById("edit-id");
 // --- Admin Check ---
 async function checkAdmin(user) {
   const adminDoc = await getDoc(doc(db, "admins", user.uid));
-  console.log("UID:", user.uid);
-  console.log("Admin doc exists:", adminDoc.exists());
   return adminDoc.exists();
 }
 
@@ -238,7 +237,8 @@ function clearForm() {
   document.getElementById("input-cook").value = "";
   document.getElementById("input-ingredients").value = "";
   document.getElementById("input-steps").value = "";
-  document.getElementById("input-image").value = "";
+  const imageInput = document.getElementById("input-image");
+  imageInput.replaceWith(imageInput.cloneNode(true));
 }
 
 addBtn.addEventListener("click", () => {
@@ -260,14 +260,32 @@ saveBtn.addEventListener("click", async () => {
   const file = fileInput.files[0];
 
   let image_url = "";
+  let image_path = "";
 
   if (file) {
-    const storageRef = ref(storage, `recipes/${Date.now()}_${file.name}`);
-    await uploadBytes(storageRef, file);
-    image_url = await getDownloadURL(storageRef);
+    const arrayBuffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    const ext = file.name.split(".").pop();
+    image_path = `recipes/${hashHex}.${ext}`;
+
+    const existingRecipeWithSameImage = allRecipes.find(
+      (r) => r.image_path === image_path,
+    );
+    if (existingRecipeWithSameImage) {
+      image_url = existingRecipeWithSameImage.image_url;
+    } else {
+      const storageRef = ref(storage, image_path);
+      await uploadBytes(storageRef, file);
+      image_url = await getDownloadURL(storageRef);
+    }
   } else if (id) {
     const existing = allRecipes.find((r) => r.id === id);
     image_url = existing ? existing.image_url : "";
+    image_path = existing ? existing.image_path : "";
   }
 
   const data = {
@@ -292,6 +310,7 @@ saveBtn.addEventListener("click", async () => {
       .map((s) => s.trim())
       .filter(Boolean),
     image_url,
+    image_path,
   };
 
   if (id) {
@@ -323,7 +342,6 @@ window.editRecipe = function (id) {
   document.getElementById("input-steps").value = (recipe.steps || []).join(
     "\n",
   );
-  document.getElementById("input-image").value = recipe.image_url || "";
   formTitle.textContent = "Edit Recipe";
   formContainer.style.display = "flex";
   formContainer.scrollIntoView({ behavior: "smooth" });
@@ -347,6 +365,21 @@ modalCancelBtn.addEventListener("click", () => {
 
 modalConfirmBtn.addEventListener("click", async () => {
   if (!pendingDeleteId) return;
+  const recipe = allRecipes.find((r) => r.id === pendingDeleteId);
+
+  if (recipe && recipe.image_path) {
+    const otherRecipesUsingSameImage = allRecipes.filter(
+      (r) => r.id !== pendingDeleteId && r.image_path === recipe.image_path,
+    );
+    if (otherRecipesUsingSameImage.length === 0) {
+      try {
+        await deleteObject(ref(storage, recipe.image_path));
+      } catch (e) {
+        console.warn("Image delete failed:", e);
+      }
+    }
+  }
+
   await deleteDoc(doc(db, "recipes", pendingDeleteId));
   deleteModal.style.display = "none";
   pendingDeleteId = null;
