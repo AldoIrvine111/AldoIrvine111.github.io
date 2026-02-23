@@ -56,49 +56,91 @@
           placeholder="Search by name, category or tag..."
         />
       </div>
-
       <button id="add-btn">+ Add Recipe</button>
+      <div id="recipe-list"></div>
+    </main>
 
-      <!-- Add/Edit Form -->
-      <div id="recipe-form-container">
+    <!-- Add/Edit Form Modal -->
+    <div id="recipe-form-modal" style="display: none">
+      <div id="recipe-form-box">
+        <button id="form-close-btn">✕</button>
         <h2 id="form-title">Add Recipe</h2>
+        <p class="form-subtitle">
+          Fill in the details below to save your recipe.
+        </p>
         <input type="hidden" id="edit-id" />
-        <input type="text" id="input-title" placeholder="Recipe title" />
-        <div class="form-row">
-          <input
-            type="text"
-            id="input-category"
-            placeholder="Category (e.g. Italian)"
-          />
-          <input
-            type="text"
-            id="input-tags"
-            placeholder="Tags (comma separated)"
-          />
-          <input type="file" id="input-image" accept="image/*" />
+
+        <div class="form-grid">
+          <div class="form-field full">
+            <label for="input-title">Recipe Title</label>
+            <input
+              type="text"
+              id="input-title"
+              placeholder="e.g. Pasta Carbonara"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="input-category">Category</label>
+            <input type="text" id="input-category" placeholder="e.g. Italian" />
+          </div>
+
+          <div class="form-field">
+            <label for="input-tags">Tags</label>
+            <input
+              type="text"
+              id="input-tags"
+              placeholder="quick, pasta, egg"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="input-serving">Servings</label>
+            <input type="number" id="input-serving" placeholder="2" />
+          </div>
+
+          <div class="form-field">
+            <label for="input-prep">Prep Time (mins)</label>
+            <input type="number" id="input-prep" placeholder="10" />
+          </div>
+
+          <div class="form-field">
+            <label for="input-cook">Cook Time (mins)</label>
+            <input type="number" id="input-cook" placeholder="20" />
+          </div>
+
+          <div class="form-field full">
+            <label for="input-image">Photo</label>
+            <input type="file" id="input-image" accept="image/*" />
+          </div>
+
+          <div class="form-field full">
+            <label for="input-ingredients"
+              >Ingredients <span class="label-hint">— one per line</span></label
+            >
+            <textarea
+              id="input-ingredients"
+              placeholder="200g spaghetti&#10;2 eggs&#10;100g pancetta"
+            ></textarea>
+          </div>
+
+          <div class="form-field full">
+            <label for="input-steps"
+              >Steps <span class="label-hint">— one per line</span></label
+            >
+            <textarea
+              id="input-steps"
+              placeholder="Boil pasta until al dente&#10;Fry pancetta until crispy&#10;Combine off heat"
+            ></textarea>
+          </div>
         </div>
-        <div class="form-row">
-          <input type="number" id="input-serving" placeholder="Servings" />
-          <input type="number" id="input-prep" placeholder="Prep time (mins)" />
-          <input type="number" id="input-cook" placeholder="Cook time (mins)" />
-        </div>
-        <textarea
-          id="input-ingredients"
-          placeholder="Ingredients — one per line"
-        ></textarea>
-        <textarea
-          id="input-steps"
-          placeholder="Steps — one per line"
-        ></textarea>
+
         <div class="form-actions">
           <button id="save-btn">Save Recipe</button>
           <button id="cancel-btn">Cancel</button>
         </div>
       </div>
-
-      <!-- Recipe Cards -->
-      <div id="recipe-list"></div>
-    </main>
+    </div>
 
     <script type="module" src="app.js"></script>
 

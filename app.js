@@ -31,13 +31,17 @@ let isAdmin = false;
 const authBtn = document.getElementById("auth-btn");
 const userEmail = document.getElementById("user-email");
 const addBtn = document.getElementById("add-btn");
-const formContainer = document.getElementById("recipe-form-container");
+const formModal = document.getElementById("recipe-form-modal");
 const formTitle = document.getElementById("form-title");
+const formCloseBtn = document.getElementById("form-close-btn");
 const saveBtn = document.getElementById("save-btn");
 const cancelBtn = document.getElementById("cancel-btn");
 const recipeList = document.getElementById("recipe-list");
 const searchInput = document.getElementById("search-input");
 const editIdField = document.getElementById("edit-id");
+const recipeModal = document.getElementById("recipe-modal");
+const recipeModalContent = document.getElementById("recipe-modal-content");
+const recipeModalClose = document.getElementById("recipe-modal-close");
 
 // --- Admin Check ---
 async function checkAdmin(user) {
@@ -66,7 +70,7 @@ onAuthStateChanged(auth, async (user) => {
     userEmail.textContent = "";
     isAdmin = false;
     addBtn.style.display = "none";
-    formContainer.style.display = "none";
+    closeFormModal();
     document.querySelector("main").style.display = "none";
     recipeList.innerHTML = "";
   }
@@ -81,9 +85,7 @@ authBtn.addEventListener("click", async () => {
     try {
       await signInWithPopup(auth, provider);
     } catch (e) {
-      if (e.code !== "auth/cancelled-popup-request") {
-        console.error(e);
-      }
+      if (e.code !== "auth/cancelled-popup-request") console.error(e);
     } finally {
       authInProgress = false;
     }
@@ -124,56 +126,37 @@ function renderRecipes(recipes) {
     return;
   }
 
-  // --- Recipe Modal ---
-  const recipeModal = document.getElementById("recipe-modal");
-  const recipeModalContent = document.getElementById("recipe-modal-content");
-  const recipeModalClose = document.getElementById("recipe-modal-close");
-
   window.openRecipe = function (id) {
     const recipe = allRecipes.find((r) => r.id === id);
     if (!recipe) return;
 
     recipeModalContent.innerHTML = `
-    ${recipe.image_url ? `<img src="${recipe.image_url}" alt="${recipe.title}" />` : ""}
-    <div class="modal-category">${recipe.category || "Uncategorised"}</div>
-    <h2>${recipe.title}</h2>
-    <div class="modal-meta">
-      <span>🍽 ${recipe.serving || "—"} servings</span>
-      <span>⏱ Prep ${recipe.prep_time || "—"}m</span>
-      <span>🔥 Cook ${recipe.cook_time || "—"}m</span>
-    </div>
-    <div class="modal-tags">
-      ${(recipe.tags || []).map((t) => `<span>${t}</span>`).join("")}
-    </div>
-    <h3>Ingredients</h3>
-    <ul>
-      ${(recipe.ingredients || []).map((i) => `<li>${i}</li>`).join("")}
-    </ul>
-    <h3>Steps</h3>
-    <ol>
-      ${(recipe.steps || []).map((s) => `<li>${s}</li>`).join("")}
-    </ol>
-  `;
+      ${recipe.image_url ? `<img src="${recipe.image_url}" alt="${recipe.title}" />` : ""}
+      <div class="modal-category">${recipe.category || "Uncategorised"}</div>
+      <h2>${recipe.title}</h2>
+      <div class="modal-meta">
+        <span>🍽 ${recipe.serving || "—"} servings</span>
+        <span>⏱ Prep ${recipe.prep_time || "—"}m</span>
+        <span>🔥 Cook ${recipe.cook_time || "—"}m</span>
+      </div>
+      <div class="modal-tags">
+        ${(recipe.tags || []).map((t) => `<span>${t}</span>`).join("")}
+      </div>
+      <h3>Ingredients</h3>
+      <ul>
+        ${(recipe.ingredients || []).map((i) => `<li>${i}</li>`).join("")}
+      </ul>
+      <h3>Steps</h3>
+      <ol>
+        ${(recipe.steps || []).map((s) => `<li>${s}</li>`).join("")}
+      </ol>
+    `;
 
     recipeModal.style.display = "flex";
     document.body.style.paddingRight =
       window.innerWidth - document.documentElement.clientWidth + "px";
     document.body.style.overflow = "hidden";
   };
-
-  recipeModalClose.addEventListener("click", () => {
-    recipeModal.style.display = "none";
-    document.body.style.overflow = "";
-    document.body.style.paddingRight = "";
-  });
-
-  recipeModal.addEventListener("click", (e) => {
-    if (e.target === recipeModal) {
-      recipeModal.style.display = "none";
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    }
-  });
 
   recipes.forEach((recipe) => {
     const card = document.createElement("div");
@@ -188,11 +171,10 @@ function renderRecipes(recipes) {
       .join("");
 
     const actionsHtml = isAdmin
-      ? `
-      <div class="card-actions">
-        <button class="edit-btn" onclick="editRecipe('${recipe.id}')">Edit</button>
-        <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">Delete</button>
-      </div>`
+      ? `<div class="card-actions">
+          <button class="edit-btn" onclick="editRecipe('${recipe.id}')">Edit</button>
+          <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">Delete</button>
+        </div>`
       : "";
 
     card.innerHTML = `
@@ -226,7 +208,27 @@ searchInput.addEventListener("input", () => {
   renderRecipes(filtered);
 });
 
-// --- Form Helpers ---
+// --- Form Modal ---
+function openFormModal() {
+  formModal.style.display = "flex";
+  document.body.style.paddingRight =
+    window.innerWidth - document.documentElement.clientWidth + "px";
+  document.body.style.overflow = "hidden";
+}
+
+function closeFormModal() {
+  const box = document.getElementById("recipe-form-box");
+  if (!box) return;
+  box.style.animation = "fadeOut 0.2s ease forwards";
+  setTimeout(() => {
+    formModal.style.display = "none";
+    box.style.animation = "";
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+    clearForm();
+  }, 120);
+}
+
 function clearForm() {
   editIdField.value = "";
   document.getElementById("input-title").value = "";
@@ -244,13 +246,31 @@ function clearForm() {
 addBtn.addEventListener("click", () => {
   clearForm();
   formTitle.textContent = "Add Recipe";
-  formContainer.style.display = "flex";
-  formContainer.scrollIntoView({ behavior: "smooth" });
+  openFormModal();
 });
 
-cancelBtn.addEventListener("click", () => {
-  formContainer.style.display = "none";
-  clearForm();
+formCloseBtn.addEventListener("click", closeFormModal);
+cancelBtn.addEventListener("click", closeFormModal);
+
+formModal.addEventListener("click", (e) => {
+  if (e.target === formModal) closeFormModal();
+});
+
+// --- Recipe Modal Close ---
+function closeRecipeModal() {
+  const box = document.getElementById("recipe-modal-box");
+  box.style.animation = "fadeOut 0.2s ease forwards";
+  setTimeout(() => {
+    recipeModal.style.display = "none";
+    box.style.animation = "";
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  }, 120);
+}
+
+recipeModalClose.addEventListener("click", closeRecipeModal);
+recipeModal.addEventListener("click", (e) => {
+  if (e.target === recipeModal) closeRecipeModal();
 });
 
 // --- Save (Create / Update) ---
@@ -320,8 +340,7 @@ saveBtn.addEventListener("click", async () => {
     await addDoc(collection(db, "recipes"), data);
   }
 
-  formContainer.style.display = "none";
-  clearForm();
+  closeFormModal();
   loadRecipes();
 });
 
@@ -343,8 +362,7 @@ window.editRecipe = function (id) {
     "\n",
   );
   formTitle.textContent = "Edit Recipe";
-  formContainer.style.display = "flex";
-  formContainer.scrollIntoView({ behavior: "smooth" });
+  openFormModal();
 };
 
 // --- Delete Modal ---
