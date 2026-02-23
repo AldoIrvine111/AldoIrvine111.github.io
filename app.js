@@ -1,6 +1,7 @@
 import {
   db,
   auth,
+  storage,
   provider,
   signInWithPopup,
   signOut,
@@ -15,6 +16,9 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  ref,
+  uploadBytes,
+  getDownloadURL,
 } from "./firebase.js";
 
 // --- State ---
@@ -252,6 +256,20 @@ cancelBtn.addEventListener("click", () => {
 // --- Save (Create / Update) ---
 saveBtn.addEventListener("click", async () => {
   const id = editIdField.value;
+  const fileInput = document.getElementById("input-image");
+  const file = fileInput.files[0];
+
+  let image_url = "";
+
+  if (file) {
+    const storageRef = ref(storage, `recipes/${Date.now()}_${file.name}`);
+    await uploadBytes(storageRef, file);
+    image_url = await getDownloadURL(storageRef);
+  } else if (id) {
+    const existing = allRecipes.find((r) => r.id === id);
+    image_url = existing ? existing.image_url : "";
+  }
+
   const data = {
     title: document.getElementById("input-title").value,
     category: document.getElementById("input-category").value,
@@ -273,7 +291,7 @@ saveBtn.addEventListener("click", async () => {
       .value.split("\n")
       .map((s) => s.trim())
       .filter(Boolean),
-    image_url: document.getElementById("input-image").value.trim(),
+    image_url,
   };
 
   if (id) {
