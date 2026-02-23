@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Cookbook</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>My Cookbook</h1>
+    <button id="auth-btn">Login</button>
+    <span id="user-email"></span>
+  </header>
+
+  <main>
+    <input type="text" id="search-input" placeholder="Search recipes..." />
+
+    <!-- Add/Edit Form (hidden by default) -->
+    <div id="recipe-form-container" style="display:none;">
+      <h2 id="form-title">Add Recipe</h2>
+      <input type="hidden" id="edit-id" />
+      <input type="text" id="input-title" placeholder="Title" />
+      <input type="text" id="input-category" placeholder="Category" />
+      <input type="text" id="input-tags" placeholder="Tags (comma separated)" />
+      <input type="number" id="input-serving" placeholder="Servings" />
+      <input type="number" id="input-prep" placeholder="Prep time (mins)" />
+      <input type="number" id="input-cook" placeholder="Cook time (mins)" />
+      <textarea id="input-ingredients" placeholder="Ingredients (one per line)"></textarea>
+      <textarea id="input-steps" placeholder="Steps (one per line)"></textarea>
+      <input type="text" id="input-image" placeholder="Image URL (optional)" />
+      <button id="save-btn">Save Recipe</button>
+      <button id="cancel-btn">Cancel</button>
+    </div>
+
+    <button id="add-btn" style="display:none;">+ Add Recipe</button>
+
+    <!-- Recipe Cards -->
+    <div id="recipe-list"></div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
