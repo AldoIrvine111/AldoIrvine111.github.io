@@ -57,24 +57,46 @@ async function loadRecipes() {
 // --- Render ---
 function renderRecipes(recipes) {
   recipeList.innerHTML = '';
+
+  if (recipes.length === 0) {
+    recipeList.innerHTML = `
+      <div class="empty-state">
+        <p>No recipes yet. Start adding your favourites.</p>
+      </div>`;
+    return;
+  }
+
   recipes.forEach(recipe => {
     const card = document.createElement('div');
     card.className = 'recipe-card';
+
+    const imageHtml = recipe.image_url
+      ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" />`
+      : `<div class="card-image-placeholder">🍽️</div>`;
+
+    const tagsHtml = (recipe.tags || []).map(t => `<span>${t}</span>`).join('');
+
+    const actionsHtml = currentUser ? `
+      <div class="card-actions">
+        <button class="edit-btn" onclick="editRecipe('${recipe.id}')">Edit</button>
+        <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">Delete</button>
+      </div>` : '';
+
     card.innerHTML = `
-      ${recipe.image_url ? `<img src="${recipe.image_url}" alt="${recipe.title}" />` : ''}
-      <h2>${recipe.title}</h2>
-      <div class="meta">
-        ${recipe.category} · ${recipe.serving} servings · Prep ${recipe.prep_time}m · Cook ${recipe.cook_time}m
+      ${imageHtml}
+      <div class="card-body">
+        <div class="category">${recipe.category || 'Uncategorised'}</div>
+        <h2>${recipe.title}</h2>
+        <div class="meta">
+          <span class="meta-item">🍽 ${recipe.serving || '—'} servings</span>
+          <span class="meta-item">⏱ Prep ${recipe.prep_time || '—'}m</span>
+          <span class="meta-item">🔥 Cook ${recipe.cook_time || '—'}m</span>
+        </div>
+        <div class="tags">${tagsHtml}</div>
+        ${actionsHtml}
       </div>
-      <div class="tags">
-        ${(recipe.tags || []).map(t => `<span>${t}</span>`).join('')}
-      </div>
-      ${currentUser ? `
-        <div class="card-actions">
-          <button onclick="editRecipe('${recipe.id}')">Edit</button>
-          <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">Delete</button>
-        </div>` : ''}
     `;
+
     recipeList.appendChild(card);
   });
 }
@@ -108,6 +130,7 @@ addBtn.addEventListener('click', () => {
   clearForm();
   formTitle.textContent = 'Add Recipe';
   formContainer.style.display = 'flex';
+  formContainer.scrollIntoView({ behavior: 'smooth' });
 });
 
 cancelBtn.addEventListener('click', () => {
@@ -158,6 +181,7 @@ window.editRecipe = function(id) {
   document.getElementById('input-image').value = recipe.image_url || '';
   formTitle.textContent = 'Edit Recipe';
   formContainer.style.display = 'flex';
+  formContainer.scrollIntoView({ behavior: 'smooth' });
 };
 
 // --- Delete ---

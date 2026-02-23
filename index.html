@@ -9,32 +9,40 @@
 <body>
 
   <header>
-    <h1>My Cookbook</h1>
-    <button id="auth-btn">Login</button>
+    <h1>My <span>Cookbook</span></h1>
     <span id="user-email"></span>
+    <button id="auth-btn">Login</button>
   </header>
 
   <main>
-    <input type="text" id="search-input" placeholder="Search recipes..." />
-
-    <!-- Add/Edit Form (hidden by default) -->
-    <div id="recipe-form-container" style="display:none;">
-      <h2 id="form-title">Add Recipe</h2>
-      <input type="hidden" id="edit-id" />
-      <input type="text" id="input-title" placeholder="Title" />
-      <input type="text" id="input-category" placeholder="Category" />
-      <input type="text" id="input-tags" placeholder="Tags (comma separated)" />
-      <input type="number" id="input-serving" placeholder="Servings" />
-      <input type="number" id="input-prep" placeholder="Prep time (mins)" />
-      <input type="number" id="input-cook" placeholder="Cook time (mins)" />
-      <textarea id="input-ingredients" placeholder="Ingredients (one per line)"></textarea>
-      <textarea id="input-steps" placeholder="Steps (one per line)"></textarea>
-      <input type="text" id="input-image" placeholder="Image URL (optional)" />
-      <button id="save-btn">Save Recipe</button>
-      <button id="cancel-btn">Cancel</button>
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search by name, category or tag..." />
     </div>
 
-    <button id="add-btn" style="display:none;">+ Add Recipe</button>
+    <button id="add-btn">+ Add Recipe</button>
+
+    <!-- Add/Edit Form -->
+    <div id="recipe-form-container">
+      <h2 id="form-title">Add Recipe</h2>
+      <input type="hidden" id="edit-id" />
+      <input type="text" id="input-title" placeholder="Recipe title" />
+      <div class="form-row">
+        <input type="text" id="input-category" placeholder="Category (e.g. Italian)" />
+        <input type="text" id="input-tags" placeholder="Tags (comma separated)" />
+        <input type="text" id="input-image" placeholder="Image URL (optional)" />
+      </div>
+      <div class="form-row">
+        <input type="number" id="input-serving" placeholder="Servings" />
+        <input type="number" id="input-prep" placeholder="Prep time (mins)" />
+        <input type="number" id="input-cook" placeholder="Cook time (mins)" />
+      </div>
+      <textarea id="input-ingredients" placeholder="Ingredients — one per line"></textarea>
+      <textarea id="input-steps" placeholder="Steps — one per line"></textarea>
+      <div class="form-actions">
+        <button id="save-btn">Save Recipe</button>
+        <button id="cancel-btn">Cancel</button>
+      </div>
+    </div>
 
     <!-- Recipe Cards -->
     <div id="recipe-list"></div>
