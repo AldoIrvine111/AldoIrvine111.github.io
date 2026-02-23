@@ -827,3 +827,12 @@ main {
     padding: 28px 20px;
   }
 }
+
+@keyframes spinCard {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
