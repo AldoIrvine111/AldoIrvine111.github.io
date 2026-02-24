@@ -643,6 +643,7 @@ main {
   max-height: 85vh;
   overflow-y: auto;
   border-radius: 16px;
+  -webkit-overflow-scrolling: touch;
 }
 
 #recipe-modal-content img {
