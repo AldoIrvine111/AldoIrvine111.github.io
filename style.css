@@ -618,11 +618,9 @@ main {
 }
 
 #recipe-modal-close {
-  position: sticky;
-  top: 0;
-  left: 100%;
-  float: right;
-  margin-bottom: -36px;
+  position: absolute;
+  top: -14px;
+  right: -14px;
   background: var(--brown);
   border: none;
   border-radius: 50%;
@@ -651,11 +649,12 @@ main {
 }
 
 #recipe-modal-content img {
-  width: calc(100% + 80px);
-  margin-left: -40px;
-  margin-top: -40px;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 0;
   height: 240px;
   object-fit: cover;
+  border-radius: 10px;
   display: block;
   margin-bottom: 24px;
 }
@@ -859,4 +858,10 @@ main {
 
 #recipe-modal-box::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
+}
+
+#recipe-modal-wrapper {
+  position: relative;
+  max-width: 640px;
+  width: 100%;
 }
