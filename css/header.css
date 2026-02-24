@@ -1,0 +1,50 @@
+header {
+  background: var(--brown);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(59, 42, 26, 0.2);
+}
+
+header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  color: var(--cream);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+header h1 span {
+  color: var(--terracotta);
+  font-style: italic;
+}
+
+#user-email {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+#auth-btn {
+  background: transparent;
+  border: 1px solid rgba(253, 248, 242, 0.3);
+  color: var(--cream);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-family: "Lato", sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+#auth-btn:hover {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+}

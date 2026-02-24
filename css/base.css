@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap");
+
+:root {
+  --cream: #fdf8f2;
+  --paper: #f5ede0;
+  --brown: #3b2a1a;
+  --olive: #6b7c4a;
+  --terracotta: #c4663a;
+  --muted: #9e8c7a;
+  --white: #ffffff;
+  --border: #e2d4c1;
+  --shadow: 0 4px 24px rgba(59, 42, 26, 0.08);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(196, 102, 58, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(107, 124, 74, 0.06) 0%, transparent 60%);
+  color: var(--brown);
+  min-height: 100vh;
+  padding: 0;
+}

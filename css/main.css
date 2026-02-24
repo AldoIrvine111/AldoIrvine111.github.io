@@ -1,0 +1,86 @@
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ─── SEARCH ─────────────────────────────── */
+.search-wrap {
+  margin-bottom: 36px;
+  position: relative;
+}
+
+#search-input {
+  width: 100%;
+  padding: 16px 20px 16px 48px;
+  font-size: 1rem;
+  font-family: "Lato", sans-serif;
+  border: 1.5px solid var(--border);
+  border-radius: 40px;
+  background: var(--white);
+  color: var(--brown);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+
+#search-input::placeholder {
+  color: var(--muted);
+}
+
+#search-input:focus {
+  border-color: var(--olive);
+  box-shadow: 0 0 0 3px rgba(107, 124, 74, 0.12);
+}
+
+.search-wrap::before {
+  content: "🔍";
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+/* ─── ADD BUTTON ─────────────────────────── */
+#add-btn {
+  display: none;
+  margin-bottom: 32px;
+  background: var(--terracotta);
+  color: var(--white);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-family: "Lato", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 12px rgba(196, 102, 58, 0.3);
+}
+
+#add-btn:hover {
+  background: #b05530;
+  transform: translateY(-1px);
+}
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media (max-width: 600px) {
+  header {
+    padding: 16px 20px;
+  }
+  header h1 {
+    font-size: 1.3rem;
+  }
+  main {
+    padding: 24px 16px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  #recipe-form-box {
+    padding: 28px 20px;
+  }
+}
