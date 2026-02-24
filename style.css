@@ -606,17 +606,23 @@ main {
   padding: 40px;
   max-width: 640px;
   width: 100%;
-  max-height: 85vh;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   box-shadow: 0 20px 60px rgba(59, 42, 26, 0.2);
   animation: slideUp 0.25s ease;
-  overflow: visible;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
 #recipe-modal-close {
-  position: absolute;
-  top: -14px;
-  right: -14px;
+  position: sticky;
+  top: 0;
+  left: 100%;
+  float: right;
+  margin-bottom: -36px;
   background: var(--brown);
   border: none;
   border-radius: 50%;
@@ -632,6 +638,7 @@ main {
     background 0.2s,
     transform 0.15s;
   box-shadow: 0 2px 8px rgba(59, 42, 26, 0.25);
+  z-index: 10;
 }
 
 #recipe-modal-close:hover {
@@ -640,17 +647,16 @@ main {
 }
 
 #recipe-modal-scroll {
-  max-height: 85vh;
-  overflow-y: auto;
   border-radius: 16px;
-  -webkit-overflow-scrolling: touch;
 }
 
 #recipe-modal-content img {
-  width: 100%;
+  width: calc(100% + 80px);
+  margin-left: -40px;
+  margin-top: -40px;
   height: 240px;
   object-fit: cover;
-  border-radius: 10px;
+  display: block;
   margin-bottom: 24px;
 }
 
@@ -836,4 +842,21 @@ main {
   to {
     transform: rotate(360deg);
   }
+}
+
+#recipe-modal-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+#recipe-modal-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#recipe-modal-box::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+#recipe-modal-box::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }
