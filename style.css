@@ -650,15 +650,13 @@ main {
 
 #recipe-modal-content img {
   width: 100%;
-  margin-left: 0;
-  margin-top: 0;
-  height: 240px;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   border-radius: 10px;
   display: block;
   margin-bottom: 24px;
+  background: var(--paper);
 }
-
 #recipe-modal-content .modal-category {
   font-size: 0.75rem;
   text-transform: uppercase;
