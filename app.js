@@ -63,6 +63,7 @@ onAuthStateChanged(auth, async (user) => {
     isAdmin = await checkAdmin(user);
     addBtn.style.display = isAdmin ? "block" : "none";
     document.querySelector("main").style.display = "block";
+    showSkeletons();
     loadRecipes();
   } else {
     document.getElementById("landing").style.display = "flex";
@@ -108,10 +109,11 @@ document
 
 // --- Load Recipes ---
 async function loadRecipes() {
+  showSkeletons();
   const q = query(collection(db, "recipes"), orderBy("created_at", "desc"));
   const snapshot = await getDocs(q);
   allRecipes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  renderRecipes(allRecipes);
+  setTimeout(() => renderRecipes(allRecipes), 200);
 }
 
 // --- Render ---
@@ -168,7 +170,11 @@ function renderRecipes(recipes) {
     });
 
     const imageHtml = recipe.image_url
-      ? `<img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" />`
+      ? `<div class="card-image-wrap">
+      <img class="card-image" src="${recipe.image_url}" alt="${recipe.title}" 
+        style="opacity:0; transition: opacity 0.3s ease;"
+        onload="this.style.opacity='1'" />
+    </div>`
       : `<div class="card-image-placeholder">🍽️</div>`;
 
     const tagsHtml = (recipe.tags || [])
@@ -198,6 +204,14 @@ function renderRecipes(recipes) {
     `;
 
     recipeList.appendChild(card);
+  });
+  const allImages = recipeList.querySelectorAll(".card-image");
+  allImages.forEach((img) => {
+    if (img.complete) {
+      img.style.opacity = "1";
+    } else {
+      img.addEventListener("load", () => (img.style.opacity = "1"));
+    }
   });
 }
 
@@ -495,4 +509,27 @@ function showToast(message, type = "success") {
   toast.textContent = message;
   toast.className = `show toast-${type}`;
   setTimeout(() => (toast.className = ""), 1500);
+}
+
+// --- Skeleton Loader ---
+function showSkeletons() {
+  recipeList.innerHTML = Array(9)
+    .fill(
+      `
+    <div class="skeleton-card">
+      <div class="skeleton-image"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line long"></div>
+        <div class="skeleton-tags">
+          <div class="skeleton-line tag"></div>
+          <div class="skeleton-line tag"></div>
+          <div class="skeleton-line tag"></div>
+        </div>
+      </div>
+    </div>
+  `,
+    )
+    .join("");
 }
