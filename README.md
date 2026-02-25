@@ -20,6 +20,7 @@ A personal recipe collection built with vanilla JavaScript and Firebase, hosted 
 | Database | Firebase Firestore               |
 | Storage  | Firebase Storage                 |
 | Auth     | Firebase Authentication (Google) |
+| AI       | Claude Sonnet 4.6                |
 
 ## Project Structure
 
