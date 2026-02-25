@@ -20,7 +20,9 @@ main {
   background: var(--white);
   color: var(--brown);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   box-shadow: var(--shadow);
 }
 
@@ -57,7 +59,9 @@ main {
   font-weight: 700;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
   box-shadow: 0 4px 12px rgba(196, 102, 58, 0.3);
 }
 
@@ -83,4 +87,37 @@ main {
   #recipe-form-box {
     padding: 28px 20px;
   }
+}
+
+/* ─── TOAST ──────────────────────────────── */
+#toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: "Lato", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#toast.toast-success {
+  background: var(--olive);
+}
+#toast.toast-danger {
+  background: var(--terracotta);
 }

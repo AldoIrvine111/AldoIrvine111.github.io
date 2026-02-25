@@ -246,6 +246,8 @@ function clearForm() {
   document.getElementById("input-steps").value = "";
   const imageInput = document.getElementById("input-image");
   imageInput.replaceWith(imageInput.cloneNode(true));
+  saveBtn.textContent = "Save Recipe";
+  saveBtn.disabled = false;
 }
 
 addBtn.addEventListener("click", () => {
@@ -280,6 +282,8 @@ recipeModal.addEventListener("click", (e) => {
 
 // --- Save (Create / Update) ---
 saveBtn.addEventListener("click", async () => {
+  saveBtn.textContent = "Saving...";
+  saveBtn.disabled = true;
   const id = editIdField.value;
   const fileInput = document.getElementById("input-image");
   const file = fileInput.files[0];
@@ -346,6 +350,9 @@ saveBtn.addEventListener("click", async () => {
   }
 
   closeFormModal();
+  saveBtn.textContent = "Saving Recipe";
+  saveBtn.disabled = false;
+  showToast("Recipe saved!");
   loadRecipes();
 });
 
@@ -382,11 +389,15 @@ window.deleteRecipe = function (id) {
 };
 
 modalCancelBtn.addEventListener("click", () => {
+  modalConfirmBtn.textContent = "Delete";
+  modalConfirmBtn.disabled = false;
   deleteModal.style.display = "none";
   pendingDeleteId = null;
 });
 
 modalConfirmBtn.addEventListener("click", async () => {
+  modalConfirmBtn.textContent = "Deleting...";
+  modalConfirmBtn.disabled = true;
   if (!pendingDeleteId) return;
   const recipe = allRecipes.find((r) => r.id === pendingDeleteId);
 
@@ -404,13 +415,18 @@ modalConfirmBtn.addEventListener("click", async () => {
   }
 
   await deleteDoc(doc(db, "recipes", pendingDeleteId));
+  modalConfirmBtn.textContent = "Delete";
+  modalConfirmBtn.disabled = false;
   deleteModal.style.display = "none";
   pendingDeleteId = null;
+  showToast("Recipe deleted!", "danger");
   loadRecipes();
 });
 
 deleteModal.addEventListener("click", (e) => {
   if (e.target === deleteModal) {
+    modalConfirmBtn.textContent = "Delete";
+    modalConfirmBtn.disabled = false;
     deleteModal.style.display = "none";
     pendingDeleteId = null;
   }
@@ -443,6 +459,8 @@ signoutCancelBtn.addEventListener("click", () => {
 });
 
 signoutConfirmBtn.addEventListener("click", () => {
+  signoutConfirmBtn.textContent = "Signing out...";
+  signoutConfirmBtn.disabled = true;
   signoutModal.style.display = "none";
   signOut(auth);
 });
@@ -470,3 +488,11 @@ document.addEventListener("keydown", (e) => {
     signoutModal.style.display = "none";
   }
 });
+
+// --- Toast ---
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = `show toast-${type}`;
+  setTimeout(() => (toast.className = ""), 1500);
+}
