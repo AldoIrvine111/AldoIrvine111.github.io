@@ -78,7 +78,7 @@ onAuthStateChanged(auth, async (user) => {
 
 authBtn.addEventListener("click", async () => {
   if (currentUser) {
-    signOut(auth);
+    document.getElementById("signout-modal").style.display = "flex";
   } else {
     if (authInProgress) return;
     authInProgress = true;
@@ -430,5 +430,43 @@ document.addEventListener("keydown", (e) => {
   if (deleteModal.style.display === "flex") {
     deleteModal.style.display = "none";
     pendingDeleteId = null;
+  }
+});
+
+// --- Sign Out Modal ---
+const signoutModal = document.getElementById("signout-modal");
+const signoutConfirmBtn = document.getElementById("signout-confirm-btn");
+const signoutCancelBtn = document.getElementById("signout-cancel-btn");
+
+signoutCancelBtn.addEventListener("click", () => {
+  signoutModal.style.display = "none";
+});
+
+signoutConfirmBtn.addEventListener("click", () => {
+  signoutModal.style.display = "none";
+  signOut(auth);
+});
+
+signoutModal.addEventListener("click", (e) => {
+  if (e.target === signoutModal) signoutModal.style.display = "none";
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (recipeModal.style.display === "flex") {
+    closeRecipeModal();
+    return;
+  }
+  if (formModal.style.display === "flex") {
+    closeFormModal();
+    return;
+  }
+  if (deleteModal.style.display === "flex") {
+    deleteModal.style.display = "none";
+    pendingDeleteId = null;
+    return;
+  }
+  if (signoutModal.style.display === "flex") {
+    signoutModal.style.display = "none";
   }
 });
