@@ -62,8 +62,7 @@ onAuthStateChanged(auth, async (user) => {
     userEmail.textContent = user.email;
     isAdmin = await checkAdmin(user);
     addBtn.style.display = isAdmin ? "block" : "none";
-    document.querySelector("main").style.display = "block";
-    showSkeletons();
+    document.querySelector("main").style.display = "block";    
     loadRecipes();
   } else {
     document.getElementById("landing").style.display = "flex";
@@ -364,7 +363,7 @@ saveBtn.addEventListener("click", async () => {
   }
 
   closeFormModal();
-  saveBtn.textContent = "Saving Recipe";
+  saveBtn.textContent = "Save Recipe";
   saveBtn.disabled = false;
   showToast("Recipe saved!");
   loadRecipes();
@@ -446,22 +445,6 @@ deleteModal.addEventListener("click", (e) => {
   }
 });
 
-// --- Escape Key ---
-document.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape") return;
-  if (recipeModal.style.display === "flex") {
-    closeRecipeModal();
-    return;
-  }
-  if (formModal.style.display === "flex") {
-    closeFormModal();
-    return;
-  }
-  if (deleteModal.style.display === "flex") {
-    deleteModal.style.display = "none";
-    pendingDeleteId = null;
-  }
-});
 
 // --- Sign Out Modal ---
 const signoutModal = document.getElementById("signout-modal");
@@ -483,6 +466,7 @@ signoutModal.addEventListener("click", (e) => {
   if (e.target === signoutModal) signoutModal.style.display = "none";
 });
 
+// --- Escape Key ---
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
   if (recipeModal.style.display === "flex") {
