@@ -62,7 +62,7 @@ onAuthStateChanged(auth, async (user) => {
     userEmail.textContent = user.email;
     isAdmin = await checkAdmin(user);
     addBtn.style.display = isAdmin ? "block" : "none";
-    document.querySelector("main").style.display = "block";    
+    document.querySelector("main").style.display = "block";
     loadRecipes();
   } else {
     document.getElementById("landing").style.display = "flex";
@@ -273,7 +273,17 @@ formCloseBtn.addEventListener("click", closeFormModal);
 cancelBtn.addEventListener("click", closeFormModal);
 
 formModal.addEventListener("click", (e) => {
-  if (e.target === formModal) closeFormModal();
+  if (e.target !== formModal) return;
+  const hasData =
+    document.getElementById("input-title").value ||
+    document.getElementById("input-ingredients").value ||
+    document.getElementById("input-steps").value;
+
+  if (hasData) {
+    document.getElementById("unsaved-modal").style.display = "flex";
+  } else {
+    closeFormModal();
+  }
 });
 
 // --- Recipe Modal Close ---
@@ -445,7 +455,6 @@ deleteModal.addEventListener("click", (e) => {
   }
 });
 
-
 // --- Sign Out Modal ---
 const signoutModal = document.getElementById("signout-modal");
 const signoutConfirmBtn = document.getElementById("signout-confirm-btn");
@@ -485,6 +494,10 @@ document.addEventListener("keydown", (e) => {
   if (signoutModal.style.display === "flex") {
     signoutModal.style.display = "none";
   }
+  if (unsavedModal.style.display === "flex") {
+    unsavedModal.style.display = "none";
+    return;
+  }
 });
 
 // --- Toast ---
@@ -517,3 +530,17 @@ function showSkeletons() {
     )
     .join("");
 }
+
+// --- Unsaved Changes Modal ---
+const unsavedModal = document.getElementById("unsaved-modal");
+const unsavedConfirmBtn = document.getElementById("unsaved-confirm-btn");
+const unsavedCancelBtn = document.getElementById("unsaved-cancel-btn");
+
+unsavedConfirmBtn.addEventListener("click", () => {
+  unsavedModal.style.display = "none";
+  closeFormModal();
+});
+
+unsavedCancelBtn.addEventListener("click", () => {
+  unsavedModal.style.display = "none";
+});
